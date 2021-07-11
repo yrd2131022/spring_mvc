@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd
+	">
+
+
+	<!-- 引入其他配置文件 -->
+	<import resource="applicationContext-dataSource.xml" />
+	
+	<bean id="appUtils" class="com.yrd.spring_mvc.utils.AppUtils"></bean>
+	
+
+
+
+<!-- 	<bean id="user1" class="com.yrd.spring.quick_develop.domain.User"> -->
+<!-- 		<property name="name" value="xiaoli"></property> -->
+<!-- 		<property name="addr" value="城关"></property> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="user2" class="com.yrd.spring.quick_develop.domain.User"> -->
+<!-- 		<property name="name" value="lucy"></property> -->
+<!-- 		<property name="addr" value="广东"></property> -->
+<!-- 	</bean> -->
+
+	<!-- scope="singleton"单例的，默认的 -->
+	<!-- 无参“构造”方法实例化 -->
+	<!-- Bean的依赖注入的数据类型:1.普通数据类型2.引用数据类型3.集合数据类型 -->
+<!-- 	<bean id="userDao" -->
+<!-- 		class="com.yrd.spring.quick_develop.dao.impl.UserDaoImpl"> -->
+
+<!-- 		<property name="username" value="zhangsan"></property> -->
+<!-- 		<property name="age" value="28"></property> -->
+
+<!-- 		<property name="strList"> -->
+<!-- 			<list> -->
+<!-- 				<value>aaa</value> -->
+<!-- 				<value>bbb</value> -->
+<!-- 				<value>ccc</value> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+
+<!-- 		<property name="userMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="u1" value-ref="user1"></entry> -->
+<!-- 				<entry key="u2" value-ref="user2"></entry> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+
+<!-- 		<property name="properties"> -->
+<!-- 			<props> -->
+<!-- 				<prop key="p1">pp1</prop> -->
+<!-- 				<prop key="p2">pp2</prop> -->
+<!-- 				<prop key="p3">pp3</prop> -->
+<!-- 			</props> -->
+<!-- 		</property> -->
+
+<!-- 	</bean> -->
+
+
+	<!-- scope="singleton"单例的，默认的 -->
+	<!-- 无参“构造”方法实例化 -->
+	<!-- <bean id="userDao" -->
+	<!-- class="com.yrd.spring.quick_develop.dao.impl.UserDaoImpl" -->
+	<!-- scope="singleton" init-method="init" destroy-method="destroy"></bean> -->
+	
+	
+	
+<!-- 	<bean id="userDao" -->
+<!-- 	class="com.yrd.spring.quick_develop.dao.impl.UserDaoImpl" -->
+<!-- 	scope="singleton"></bean> -->
+	
+
+
+
+	<!-- set方法注入：<property name="userDao">中的name的值是 public void setUserDao(IUserDao 
+		userDao){}方法名，去掉set后再首字母小写 。ref="userDao" 的值是<bean id="userDao"的值， 这样就可以将<bean 
+		id="userDao"注入到 <bean id="userService"中了 -->
+<!-- 	<bean id="userService" -->
+<!-- 	class="com.yrd.spring.quick_develop.service.impl.UserServiceImpl"> -->
+<!-- 	<property name="userDao" ref="userDao"></property> -->
+<!-- 	</bean> -->
+
+	<!-- P命名空间注入本质也是set方法注入，但比起上述的set方法注入更加方便，主要体现再配置文件中， 如下：首先，需要引入P命名空间：xmlns:p="http://www.springframework.org/schema/p" 
+		p:userDao-ref 中的 userDao就是类中setUserDao去掉set，然后首字母小写 -->
+	<!-- <bean id="userService" -->
+	<!-- class="com.yrd.spring.quick_develop.service.impl.UserServiceImpl" -->
+	<!-- p:userDao-ref="userDao"> -->
+	<!-- </bean> -->
+
+
+	<!-- 构造方法注入：<constructor-arg name="userDao" 中的name值是构造方法的参数 -->
+	<!-- 有参数的构造方法实例化 -->
+<!-- 	<bean id="userService" -->
+<!-- 	class="com.yrd.spring.quick_develop.service.impl.UserServiceImpl"> -->
+<!-- 	<constructor-arg name="userDao" ref="userDao"></constructor-arg> -->
+<!-- 	</bean> -->
+
+	<!-- 无参数的构造方法实例化 -->
+	<!-- <bean id="userService" -->
+	<!-- class="com.yrd.spring.quick_develop.service.impl.UserServiceImpl"> -->
+	<!-- </bean> -->
+
+
+	<!-- scope="singleton"单例的，默认的 -->
+	<!-- 工厂“静态”方法实例化,因为静态可以直接调用，所以《“只要一个Bean”》，就可以得到UserDao -->
+	<!-- <bean id="userDao_staticFactory" -->
+	<!-- class="com.yrd.spring.quick_develop.factory.StaticFactory" -->
+	<!-- factory-method="getUserDao"></bean> -->
+
+	<!-- scope="singleton"单例的，默认的 -->
+	<!-- 工厂“实例”方法实例化 -->
+	<!-- 需要，先实例化工厂Bean,然再获取UserDao。所以需要《“两个Bean”》 -->
+	<!-- <bean id="dynamicFactory" -->
+	<!-- class="com.yrd.spring.quick_develop.factory.DynamicFactory"></bean> -->
+	<!-- <bean id="userDao_dynamicFactory" factory-bean="dynamicFactory" -->
+	<!-- factory-method="getUserDao"></bean> -->
+
+	<!-- ============================以下是annotation的spring==================== -->
+	<!-- 注解的组件扫描 -->
+	<context:component-scan
+		base-package="com.yrd.spring_mvc"></context:component-scan>
+
+</beans>

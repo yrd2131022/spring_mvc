@@ -1,0 +1,26 @@
+步骤：
+	1.编写拦截类：public class MyInterceptor1 implements HandlerInterceptor {
+	
+	2.spring-mvc.xml配置
+<!-- 6.配置拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 对哪些资源执行拦截操作 /** 表示对所有资源拦截/xxx/** -->
+			<mvc:mapping path="/**" />
+			<!-- 配置哪些资源排除拦截操作 -->
+			<mvc:exclude-mapping path="/userController/*" />
+			<bean class="com.yrd.spring_mvc.interceptor.MyInterceptor1"></bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<!-- 对哪些资源执行拦截操作 /** 表示对所有资源拦截/xxx/** -->
+			<mvc:mapping path="/**" />
+			<bean class="com.yrd.spring_mvc.interceptor.MyInterceptor2"></bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.yrd.spring_mvc.interceptor.PrivilegeInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
+	3.编写测试代码

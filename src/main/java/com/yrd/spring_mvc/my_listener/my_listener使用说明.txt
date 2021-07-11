@@ -1,0 +1,18 @@
+1.my_listener文件夹下的ContextLoaderListener.java和WebApplicationContextUtils.java文件，自己写的，实际上
+不用我们自己实现，自己写不过时为了分析而已。
+
+2.Spring提供了一个监听器ContextLoaderListener就是对上述功能的封装，该监听器内部加载Spring配置文件，
+创建应用上下文对象，并存储到ServletContext域中，提供了一个客户端工具WebApplicationContextUtils供使用者获取应用上下文对象。
+
+所以我们需要做的只有两件事：
+	1.在web.xml中配置ContextLoaderListener监听器（导入spring-web坐标）
+		<!-- 全局初始化参数 spring-web中的-->
+		<context-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:applicationContext.xml</param-value>
+		</context-param>
+		<!-- 配置监听器 spring-web中的，需要全局参数：contextConfigLocation-->
+		<listener>
+			<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		</listener>
+	2.使用WebApplicationContextUtils获得应用上下文对象ApplicationContext

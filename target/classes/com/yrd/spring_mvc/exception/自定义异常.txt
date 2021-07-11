@@ -1,0 +1,73 @@
+为什么要自定义异常呢？
+	因为，出现异常时，
+	
+	返回的是：下面一大堆信息。对于用户来说，不太好。
+				这时，就可以自己定义异常显示的界面了，然后通过异常解析器跳转到自己写的异常界面。
+	
+	
+	
+	
+	HTTP状态 500 - 内部服务器错误
+	类型 异常报告
+
+	消息 Request processing failed; nested exception is java.lang.ArithmeticException: / by zero
+
+	描述 服务器遇到一个意外的情况，阻止它完成请求。
+
+	例外情况
+
+org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.ArithmeticException: / by zero
+	org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:626)
+	org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:733)
+	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+根本原因。
+
+java.lang.ArithmeticException: / by zero
+	com.yrd.spring_mvc.exception.service.DemoServiceImpl.show2(DemoServiceImpl.java:28)
+	com.yrd.spring_mvc.exception.controller.DemoController.show(DemoController.java:24)
+	sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	java.lang.reflect.Method.invoke(Method.java:498)
+	org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:190)
+	org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:138)
+	org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:105)
+	org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:878)
+	org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:792)
+	org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1040)
+	org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:943)
+	org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:626)
+	org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:733)
+	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+):注意 主要问题的全部 stack 信息可以在 server logs 里查看
+
+步骤：
+	1.编写自己的异常类
+	2.编写异常解析器
+	3.编辑异常界面
+	4.spring-mvc.xml配置
+			<!-- 7.配置 异常处理器 -->
+			<!-- 这里value="error"，就是/jsp/error.jsp -->
+	<!-- 	<bean -->
+	<!-- 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> -->
+	<!-- 		<property name="defaultErrorView" value="error"></property> -->
+	<!-- 		<property name="exceptionMappings"> -->
+	<!-- 			<map> -->
+	<!-- 				<entry key="java.lang.ClassCastException" value="error1"></entry> -->
+	<!-- 				<entry key="com.yrd.exception.exception.MyException" value="error2"></entry> -->
+	<!-- 			</map> -->
+	<!-- 		</property> -->
+	<!-- 	</bean> -->
+	<!-- 配置自定义的异常处理器 -->
+	<bean class="com.yrd.exception.resolver.MyExceptionResolver"></bean>

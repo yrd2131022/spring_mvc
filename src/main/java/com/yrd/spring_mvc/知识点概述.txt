@@ -1,0 +1,99 @@
+1.ApplicationContext应用上下文获取方式
+	应用上下文对象是通过 new ClasspathXmlApplicationContext(spring配置文件)方式获取的，
+	但是每次从容器中获得Bean时都要编写new ClasspathXmlApplicationContext(spring配置文件)，
+	这样得弊端是配置文件加载多次，应用上下文对象创建多次。
+	
+	在Web项目中，可以使用ServletContextListener监听Web应用的启动，我们可以在Web应用启动时，
+	就加载Spring的配置文件，创建应用上下文对象ApplicationContext，
+	在将其存储到最大的域servletContext域中，
+	这样就可以在任意位置从域中获得应用上下文ApplicationContext对象了。
+
+
+在类中使用spring容器中的Bean，每个方法都有以下两行代码：
+	ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+	IAccountService as = ac.getBean("accountService",IAccountService.class);
+	
+	可以将applicationContext.xml放到ContextLoaderListener监听器中，启动服务器，自动加载配置文件。
+	
+2.spring mvc 开发步骤：
+	1.导入springmvc相关坐标
+	2.在web.xml中配置springmvc核心控制器DispathcerServlet
+	3.编写pojo（Controller）
+	4.将Controller使用注解配置到spring容器中（@Controller）
+	5.配置spring-mvc.xml(配置组件扫描）,spring-mvc.xml的启动在DispathcerServlet中配置
+	6。执行方式测试
+	
+	可以将applicationContext.xml放到ContextLoaderListener监听器中，启动服务器，自动加载配置文件。
+	
+	
+	web.xml:
+	<!--====start====监听器配置， spring集成的，只要配置就能用。要配置下面两步 -->
+	
+    <!-- 应用上下文配置文件,下面是其他人写的classpath:Spring*.xml -->
+	<!-- 	<context-param> -->
+	<!--         <param-name>contextConfigLocation</param-name> -->
+	<!--         <param-value>classpath:Spring*.xml</param-value> -->
+	<!--      </context-param> -->
+     
+	<!-- “加载applicationContext.xml配置文件” -->
+	<!-- 用法：在web层直接调用：ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext); -->
+	<!-- 全局初始化参数 spring-web中的-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value><!-- 工程中的spring配置文件 -->
+	</context-param>
+
+	<!-- Bootstraps the root web application context before servlet initialization -->
+	<!-- 配置监听器 spring-web中的，需要全局参数：contextConfigLocation-->
+	<!-- 在监听器中加载applicationContext.xml，创建spring容器 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!--====end====监听器配置， spring集成的，只要配置就能用 -->
+
+
+
+
+	<!-- ====start===== 配置SpringMVC的前端控制器================ -->
+	<servlet>
+		<!-- 配置前端过滤器 -->
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+		<!-- 初始化时加载配置文件:spring_mvc.xml -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-mvc.xml</param-value>
+		</init-param>
+		<!-- 表示容器在启动时立即加载 Servlet -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Map all requests to the DispatcherServlet for handling -->
+	<!-- 映射地址 -->
+	<servlet-mapping>
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<!-- ====end===== 配置SpringMVC的前端控制器 -->
+	
+	
+	
+3.SpringMVC的执行流程	
+	( 1 )用户通过浏览器向服务器发送请求，请求会被 Spring MVC 的前端控制器DispatcherServlet 所拦截 。
+	( 2 ) DispatcherServlet 拦截到请求后，会调用 HandlerMapping 处理器映射器 。
+	(3 )处理器映射器根据请求 URL 找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给 DispatcherServlet。
+	( 4 ) DispatcherServlet 会通过返回信息选择合适的 HandlerAdapter (处理器适配器)。
+	( 5 ) HandlerAdapter 会调用并执行 Handler (处理器)，这里的处理器指的就是程序中编写的 Controller 类，也被称之为后端控制器 。
+	( 6 ) Controller 执行完成后，会返回一个 ModelAndView 对象，该对象中会包含视图名或包含模型和视图名 。
+	( 7 ) HandlerAdapter 将 ModelAndView 对象返回给 DispatcherServlet。
+	( 8 ) DispatcherServlet 会根据 ModelAndView 对象选择一个合适的 ViewReslover (视图解析器)。
+	( 9 ) ViewReslover 解析后，会向 DispatcherServlet 中返回具体的 View (视图)。
+	( 10 ) DispatcherServlet 对 View 进行渲染(即将模型数据填充至视图中)。
+	( 11 )视图渲染结果会返回给客户端浏览器显示 .
+	
+	
+	
+	
+	
+	
